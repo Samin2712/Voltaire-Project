@@ -32,7 +32,7 @@ temp/
 !backend/.env.example
 
 # Local data and databases
-data/
+/data/
 backend/data/
 *.db
 *.db-journal
