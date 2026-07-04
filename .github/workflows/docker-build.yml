@@ -1,0 +1,31 @@
+name: Docker Build
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  docker-build:
+    name: Build Docker services
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Create CI env file for compose
+        run: |
+          touch backend/.env
+
+      - name: Validate docker compose file
+        run: docker compose config
+
+      - name: Build all Docker services
+        run: docker compose build
