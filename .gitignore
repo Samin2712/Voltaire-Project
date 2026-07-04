@@ -1,0 +1,57 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+**/node_modules/
+dist
+**/dist/
+dist-ssr
+.output
+.vinxi
+.tanstack/**
+.nitro
+.cache/
+coverage/
+tmp/
+temp/
+*.local
+
+# Local app/platform metadata
+.lovable/
+
+# Environment files
+.env
+.env.*
+!.env.example
+!backend/.env.example
+
+# Local data and databases
+data/
+backend/data/
+*.db
+*.db-journal
+*.db-wal
+
+# Local problem/reference files
+Hackathon Problem Statement*.pdf
+
+# Wrangler / Cloudflare
+.wrangler/
+.dev.vars
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

@@ -1,0 +1,62 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: voltaire-backend
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      HOST: 0.0.0.0
+      CORS_ORIGIN: http://localhost:3000,http://localhost:5173,http://frontend:3000
+      SIMULATOR_INTERVAL_MS: 5000
+      OFFICE_HOURS_START: 9
+      OFFICE_HOURS_END: 17
+      HIGH_POWER_THRESHOLD: 600
+      SPIKE_THRESHOLD: 150
+      BILL_RATE_PER_KWH: 8.4
+      DB_PATH: ./data/voltaire.db
+    volumes:
+      - backend-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "const http = require('http'); http.get('http://localhost:3001/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); }).on('error', () => process.exit(1));"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  frontend:
+    build:
+      context: .
+    container_name: voltaire-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      HOST: 0.0.0.0
+      PORT: 3000
+      VITE_API_URL: http://localhost:3001
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  discord-bot:
+    build:
+      context: ./backend
+    container_name: voltaire-discord-bot
+    command: npm run bot:start
+    env_file:
+      - ./backend/.env
+    environment:
+      NODE_ENV: development
+      DISCORD_API_BASE: http://backend:3001
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: "no"
+
+volumes:
+  backend-data:
